@@ -1,0 +1,1 @@
+This is a placeholder to ensure the patch has at least one non-code file where needed.

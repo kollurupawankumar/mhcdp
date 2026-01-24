@@ -1,0 +1,111 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: bitnami/kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092
+    ports:
+      - "9092:9092"
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: mdhp
+      POSTGRES_PASSWORD: mdhp
+      POSTGRES_DB: mdhp
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  mhcp-metadata-service:
+    build:
+      context: ./mdhp-metadata-service
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mdhp
+      SPRING_DATASOURCE_USERNAME: mdhp
+      SPRING_DATASOURCE_PASSWORD: mdhp
+    ports:
+      - "8080:8080"
+
+  mhcp-api-gateway:
+    build:
+      context: ./mhcp-api-gateway
+    depends_on:
+      - mhcp-metadata-service
+      - mhcp-orchestrator
+    ports:
+      - "8080:8080"
+
+  mhcp-orchestrator:
+    build:
+      context: ./mhcp-orchestrator
+    depends_on:
+      - kafka
+    ports:
+      - "8081:8081"
+
+  mhcp-ui:
+    image: mhcp-platform-ui:latest
+    build:
+      context: ./mhcp-platform-ui
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  loki:
+    image: grafana/loki:2.6.1
+    ports:
+      - "3100:3100"
+
+  tempo:
+    image: grafana/tempo:1.9.0
+    ports:
+      - "9411:9411"
+
+  spark-master:
+    image: bde2020/spark-master:2.4.5
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "7080:7080"
+
+  spark-worker:
+    image: bde2020/spark-worker:2.4.5
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+    depends_on:
+      - spark-master
+    ports:
+      - "7081:7081"
+
+volumes:
+  db_data:
