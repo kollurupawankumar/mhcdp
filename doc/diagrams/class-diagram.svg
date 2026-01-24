@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300">
+  <rect x="40" y="40" width="260" height="60" fill="#e9f0ff" stroke="#2a6bd9" rx="8" ry="8"/>
+  <text x="170" y="70" text-anchor="middle" fill="#0b2e7a" font-weight="bold">SourceMetadata</text>
+  <rect x="40" y="120" width="260" height="60" fill="#e9f0ff" stroke="#2a6bd9" rx="8" ry="8"/>
+  <text x="170" y="150" text-anchor="middle" fill="#0b2e7a" font-weight="bold">TransformationMetadata</text>
+  <rect x="40" y="200" width="260" height="60" fill="#e9f0ff" stroke="#2a6bd9" rx="8" ry="8"/>
+  <text x="170" y="230" text-anchor="middle" fill="#0b2e7a" font-weight="bold">EnrichmentMetadata</text>
+  <line x1="300" y1="70" x2="360" y2="70" stroke="#6c8ed8" marker-end="url(#arrow)"/>
+  <line x1="300" y1="150" x2="360" y2="150" stroke="#6c8ed8" marker-end="url(#arrow)"/>
+  <line x1="300" y1="230" x2="360" y2="230" stroke="#6c8ed8" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6c8ed8" />
+    </marker>
+  </defs>
+</svg>

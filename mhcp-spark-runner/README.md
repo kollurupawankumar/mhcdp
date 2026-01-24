@@ -1,10 +1,13 @@
-# MDHP Spark Runner
+MDHP Spark Runner
 
-- Provides a SparkRunner interface and a LocalSparkRunner implementation.
-- Fail-fast toggle: spark runner will throw on failure if configured to fail fast.
-- Input/output script paths are configurable via method parameters and/or config.
+Overview
+- Spark runner abstraction for LOCAL and EMR. Local uses spark-submit; EMR is a placeholder for Phase 7 integration.
 
-Usage notes:
-- Use SparkRunnerFactory.getRunner(SparkRunnerFactory.RunnerType.LOCAL) to obtain a runner.
-- Call runJob(stage, payload, scriptPath, inputPath, outputPath) to execute.
-- In production, switch to EMR runner by implementing an EMR runner and wiring SparkRunnerFactory accordingly.
+Default behavior
+- Fail-fast toggle via spark.runner.failFast (default true)
+- IO per-run: scriptPath, inputPath, outputPath; can be overridden via payload
+
+How to run
+- Local: run via the host or container; specify properties as needed:
+  - java -Dspark.runner.failFast=false -Dspark.script.ingestion=/path/to/ingest.py ...
+- EMR: set spark.runner.type=EMR and provide emr.* config when implemented

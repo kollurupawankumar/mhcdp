@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="240">
+  <rect x="10" y="40" width="140" height="50" fill="#eaf2ff" stroke="#2a6bd9" />
+  <text x="80" y="72" text-anchor="middle" fill="#0b2e7a">UI</text>
+  <rect x="180" y="40" width="140" height="50" fill="#eaf2ff" stroke="#2a6bd9" />
+  <text x="250" y="72" text-anchor="middle" fill="#0b2e7a">Gateway</text>
+  <rect x="350" y="40" width="180" height="50" fill="#eaf2ff" stroke="#2a6bd9" />
+  <text x="430" y="72" text-anchor="middle" fill="#0b2e7a">Orchestrator</text>
+  <rect x="560" y="40" width="140" height="50" fill="#eaf2ff" stroke="#2a6bd9" />
+  <text x="630" y="72" text-anchor="middle" fill="#0b2e7a">Ingestion</text>
+
+  <line x1="150" y1="60" x2="180" y2="60" stroke="#6c8ed8" marker-end="url(#arrow)"/>
+  <line x1="320" y1="60" x2="350" y2="60" stroke="#6c8ed8" marker-end="url(#arrow)"/>
+  <line x1="520" y1="60" x2="560" y2="60" stroke="#6c8ed8" marker-end="url(#arrow)"/>
+
+  <circle cx="740" cy="60" r="16" fill="#6c8ed8" />
+  <text x="740" y="106" text-anchor="middle" fill="#6c8ed8">Spark</text>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6c8ed8" />
+    </marker>
+  </defs>
+</svg>

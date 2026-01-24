@@ -1,0 +1,17 @@
+# IDEs and editors
+.idea/
+.vscode/
+.project
+.classpath
+.settings/
+.classpath.properties
+.env
+.DS_Store
+.idea_modules/
+
+# Maven
+# Node
+# OS
+# Logs
+# Docker
+# PySpark artifacts
