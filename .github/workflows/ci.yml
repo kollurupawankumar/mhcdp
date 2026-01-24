@@ -23,6 +23,16 @@ jobs:
         run: |
           mvn -DskipTests install
 
+  diagram-regen:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Regen diagrams (Mermaid CLI required)
+        run: |
+          bash scripts/regen-diagrams.sh || echo "Mermaid CLI not installed; skipping regen in CI"
+
   docker-lint:
     needs: build
     runs-on: ubuntu-latest

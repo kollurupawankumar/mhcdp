@@ -22,8 +22,11 @@ public class EMRSparkRunner implements SparkRunner {
     handle.setStartedAt(java.time.Instant.now());
 
     boolean emrEnabled = Boolean.parseBoolean(System.getProperty("emr.enabled", "false"));
+    String emrRegion = System.getProperty("emr.region", "us-east-1");
+    String emrClusterId = System.getProperty("emr.clusterId", "");
+    String emrSteps = System.getProperty("emr.steps", "");
     if (emrEnabled) {
-      log.info("[EMR] Submitting EMR Spark job for stage {} using script {}", stage, scriptPath);
+      log.info("[EMR] Submitting EMR Spark job for stage {} using script {} (region={}, clusterId={}, steps={})", stage, scriptPath, emrRegion, emrClusterId, emrSteps);
       // Placeholder: In Phase 7 we'd submit an EMR Step via AWS SDK and poll for completion
       // Simulate EMR latency
       Thread.sleep(2500);

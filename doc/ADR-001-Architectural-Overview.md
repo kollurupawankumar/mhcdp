@@ -1,5 +1,7 @@
 ADR 001: Architectural Overview
 
+Status: Accepted
+
 Context
 - MDHP is designed to be metadata-driven, event-driven, and local-first with PySpark compute, Kafka orchestration, and a medallion architecture stored in a dockerized database. Production uses EMR; local uses Docker Spark.
 - UI manages metadata (no YAML); all metadata lives in a DB.
@@ -18,14 +20,16 @@ Consequences
 - UI-driven metadata reduces YAML churn and onboarding time.
 - EMR integration will be implemented in Phase 7 with AWS EMR SDK usage and config.
 - Outbox + reconciler enables robust reliability and idempotence.
+- This design includes an architectural decision log to keep stakeholders aligned as the platform evolves.
 
 Rationale
 - Metadata-driven pipelines improve onboarding speed and reduce maintenance costs.
-- Event-driven, stage-based orchestration with Kafka enables loose coupling and fault tolerance.
-- The medallion approach aligns with common data engineering best practices.
+- Event-driven, stage-based orchestration with Kafka enables asynchronous progression and retry semantics.
+- A medallion-based data store ensures consistent data lifecycle handling and query patterns.
+- The architecture supports both local development and production deployment with a clear path to EMR.
 
-Quality attributes
-- Correctness, Reliability, Observability, and Extensibility addressed via patterns (outbox, reconciler, idempotent consumers).
+Quality attributes addressed
+- Correctness, Reliability, Observability, and Extensibility are addressed via: outbox, reconciler, DLQ, and OpenTelemetry plans.
 
 References
 - ADR-004 Spark-Fail-Fast
