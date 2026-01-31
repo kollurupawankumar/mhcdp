@@ -8,7 +8,7 @@
 .env
 .DS_Store
 .idea_modules/
-
+**/target/
 # Maven
 # Node
 # OS

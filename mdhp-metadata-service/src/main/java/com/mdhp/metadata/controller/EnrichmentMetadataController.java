@@ -1,8 +1,8 @@
 package com.mdhp.metadata.controller;
 
+import com.mdhp.metadata.model.EnrichmentMetadataEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.mdhp.metadata.model.EnrichmentMetadata;
 import com.mdhp.metadata.repo.EnrichmentMetadataRepository;
 import java.util.List;
 import java.util.Optional;
@@ -16,23 +16,23 @@ public class EnrichmentMetadataController {
   private EnrichmentMetadataRepository repository;
 
   @GetMapping
-  public List<EnrichmentMetadata> list() {
+  public List<EnrichmentMetadataEntity> list() {
     return repository.findAll();
   }
 
   @PostMapping
-  public EnrichmentMetadata create(@RequestBody EnrichmentMetadata em) {
+  public EnrichmentMetadataEntity create(@RequestBody EnrichmentMetadataEntity em) {
     return repository.save(em);
   }
 
   @GetMapping("/{id}")
-  public EnrichmentMetadata get(@PathVariable Long id) {
-    Optional<EnrichmentMetadata> o = repository.findById(id);
+  public EnrichmentMetadataEntity get(@PathVariable Long id) {
+    Optional<EnrichmentMetadataEntity> o = repository.findById(id);
     return o.orElse(null);
   }
 
   @PutMapping("/{id}")
-  public EnrichmentMetadata update(@PathVariable Long id, @RequestBody EnrichmentMetadata em) {
+  public EnrichmentMetadataEntity update(@PathVariable Long id, @RequestBody EnrichmentMetadataEntity em) {
     em.setId(id);
     return repository.save(em);
   }

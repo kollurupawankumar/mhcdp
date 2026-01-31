@@ -34,7 +34,7 @@ public class IngestionListener {
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   @KafkaListener(topics = "mdhp.pipeline.ingestion.request", groupId = "mdhp-ingest")
-  public void onIngestionRequest(String message) {
+  public void onIngestionRequest(String message) throws Exception {
     log.info("Ingestion requested: {}", message);
     try { Thread.sleep(200); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
     // Build a structured payload including paths for Spark job

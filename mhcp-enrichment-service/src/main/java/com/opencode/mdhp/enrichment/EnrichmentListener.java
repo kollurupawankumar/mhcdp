@@ -35,7 +35,7 @@ public class EnrichmentListener {
   public String toString() { return super.toString(); }
 
   @KafkaListener(topics = "mdhp.pipeline.enrichment.request", groupId = "mdhp-enrich")
-  public void onEnrichmentRequest(String message) {
+  public void onEnrichmentRequest(String message) throws Exception {
     log.info("Enrichment requested: {}", message);
     try { Thread.sleep(200); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 

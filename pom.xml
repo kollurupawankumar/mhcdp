@@ -7,19 +7,37 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>mdhp-metadata-service</module>
-    <module>mhcp-platform-ui</module>
+  <!--  <module>mdhp-metadata-service</module>
     <module>mhcp-api-gateway</module>
     <module>mhcp-orchestrator</module>
     <module>mhcp-reconciler</module>
+    <module>mhcp-ingestion-service</module> -->
+
+    <!--<module>mhcp-platform-ui</module> -->
+    <module>mhcp-api-gateway</module>
+    <module>mhcp-spark-runner</module>
+    <module>mdhp-metadata-service</module>
+    <module>mhcp-orchestrator</module>
+    <module>mhcp-ingestion-service</module>
+    <module>mhcp-transformation-service</module>
+    <module>mhcp-enrichment-service</module>
+
   </modules>
 
   <properties>
     <java.version>17</java.version>
   </properties>
 
+
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.opentelemetry.instrumentation</groupId>
+        <artifactId>opentelemetry-instrumentation-bom</artifactId>
+        <version>2.5.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>

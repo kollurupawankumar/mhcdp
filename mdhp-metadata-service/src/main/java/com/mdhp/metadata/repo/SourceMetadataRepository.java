@@ -1,7 +1,10 @@
 package com.mdhp.metadata.repo;
 
+import com.mdhp.metadata.model.SourceMetadataEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.mdhp.metadata.model.SourceMetadata;
+import org.springframework.stereotype.Repository;
 
-public interface SourceMetadataRepository extends JpaRepository<SourceMetadata, Long> {
+
+
+public interface SourceMetadataRepository extends JpaRepository<SourceMetadataEntity, Long> {
 }

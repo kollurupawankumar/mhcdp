@@ -1,7 +1,9 @@
 package com.mdhp.metadata.repo;
 
+import com.mdhp.metadata.model.EnrichmentMetadataEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.mdhp.metadata.model.EnrichmentMetadata;
+import org.springframework.stereotype.Repository;
 
-public interface EnrichmentMetadataRepository extends JpaRepository<EnrichmentMetadata, Long> {
+
+public interface EnrichmentMetadataRepository extends JpaRepository<EnrichmentMetadataEntity, Long> {
 }
