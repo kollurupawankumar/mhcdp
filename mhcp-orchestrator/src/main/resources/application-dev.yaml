@@ -1,0 +1,26 @@
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+
+  producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+      # reliability
+    acks: all
+    properties:
+      enable.idempotence: true
+      retries: 2147483647
+      max.in.flight.requests.per.connection: 5
+      delivery.timeout.ms: 120000
+      request.timeout.ms: 30000
+
+
+  datasource:
+    url: jdbc:postgresql://db:5432/mdhp
+    username: mdhp
+    password: mdhp
+
+server:
+  port: 8082
+

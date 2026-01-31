@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: mhcp-api-gateway
+
+  cloud:
+    gateway:
+      chaining:
+        strategy: inherit
+      # NO routes here - only basic config
+
+    compatibility-verifier:
+      enabled: false
+
+server:
+  port: 8080

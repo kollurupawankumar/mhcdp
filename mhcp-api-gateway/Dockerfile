@@ -1,10 +1,15 @@
-FROM maven:3.9.0-jdk-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /workspace
-COPY pom.xml mhcp-api-gateway/pom.xml
-COPY mhcp-api-gateway/src ./mhcp-api-gateway/src
-RUN mvn -q -f mhcp-api-gateway/pom.xml clean package -DskipTests
 
-FROM openjdk:17-jdk-slim
+# Copy everything (parent pom + modules)
+COPY . .
+
+RUN mvn -f mhcp-api-gateway/pom.xml clean package -DskipTests
+
+# Runtime stage
+FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY --from=build /workspace/mhcp-api-gateway/target/mhcp-api-gateway-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+
+COPY --from=build /workspace/mhcp-api-gateway/target/mhcp-api-gateway-0.0.1-SNAPSHOT.jar api-app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/app/api-app.jar"]

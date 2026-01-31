@@ -1,0 +1,36 @@
+spring:
+  cloud:
+    gateway:
+      # ALL routes are dev-only
+      routes:
+        # Metadata service route
+        - id: mdhp-metadata
+          uri: http://mdhp-metadata-service:8081
+          predicates:
+            - Path=/metadata/**
+          filters:
+            - StripPrefix=1
+
+        # Pipeline manager route
+        - id: mdhp-orchestrator
+          uri: http://mdhp-orchestrator:8081
+          predicates:
+            - Path=/pipeline/**
+          filters:
+            - StripPrefix=1
+
+        # Transformation metadata editing route
+        - id: mdhp-transformation
+          uri: http://mdhp-metadata-service:8080
+          predicates:
+            - Path=/metadata/transformation-metadata/**
+          filters:
+            - StripPrefix=1
+
+        # Enrichment metadata editing route
+        - id: mdhp-enrichment
+          uri: http://mdhp-metadata-service:8080
+          predicates:
+            - Path=/metadata/enrichment-metadata/**
+          filters:
+            - StripPrefix=1

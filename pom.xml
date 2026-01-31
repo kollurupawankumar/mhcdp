@@ -21,6 +21,7 @@
     <module>mhcp-ingestion-service</module>
     <module>mhcp-transformation-service</module>
     <module>mhcp-enrichment-service</module>
+      <module>mdhp-common</module>
 
   </modules>
 

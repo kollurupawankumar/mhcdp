@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/enrichment-metadata")
+@RequestMapping("/api/v1/enrichment-metadata")
 public class EnrichmentMetadataController {
 
   @Autowired
