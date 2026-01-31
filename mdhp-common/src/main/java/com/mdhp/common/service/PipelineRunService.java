@@ -60,7 +60,6 @@ public class PipelineRunService {
         event.put("runId", runId);
         event.put("domainCode", request.domainCode());
         event.put("entityId", request.entityId());
-        event.put("payload", request.payload());
 
         String eventJson = objectMapper.writeValueAsString(event);
 
