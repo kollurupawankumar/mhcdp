@@ -26,7 +26,7 @@ public class PipelineOutboxPublisherJob {
         this.publisher = publisher;
     }
 
-    @Scheduled(fixedDelayString = "${outbox.publisher.delay-ms:2000}")
+    //@Scheduled(fixedDelayString = "${outbox.publisher.delay-ms:2000}")
     @Transactional
     public void publishPendingEvents() {
         List<PipelineOutboxEventEntity> events =
