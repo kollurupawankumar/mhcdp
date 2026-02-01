@@ -79,11 +79,11 @@ services:
     ports:
       - "8081:8081"
 
-  mdhp-metadata-service:
+  mhcp-orchestrator:
     build:
       context: .
-      dockerfile: mdhp-metadata-service/Dockerfile
-    container_name: mdhp-metadata-service
+      dockerfile: mhcp-orchestrator/Dockerfile
+    container_name: mhcp-orchestrator
     restart: always
     depends_on:
       db:
@@ -91,7 +91,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
     ports:
-      - "8081:8081"
+      - "8082:8082"
 
   mhcp-api-gateway:
     build:

@@ -3,7 +3,7 @@ WORKDIR /workspace
 # Copy everything (parent pom + modules)
 COPY . .
 # Build only required module (faster)
-RUN mvn -f mhcp-orchestrator/pom.xml clean package -DskipTests
+RUN mvn -f pom.xml -pl mhcp-orchestrator -am clean package -DskipTests
 
 FROM eclipse-temurin:17-jre
 WORKDIR /app

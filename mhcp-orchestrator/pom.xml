@@ -44,6 +44,7 @@
     <dependency>
       <groupId>com.opencode</groupId>
       <artifactId>mdhp-common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
