@@ -10,6 +10,11 @@
   <name>MDHP Orchestrator</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -39,7 +44,6 @@
     <dependency>
       <groupId>com.opencode</groupId>
       <artifactId>mdhp-common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
@@ -48,6 +52,13 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+        <execution>
+          <goals>
+            <goal>repackage</goal>
+          </goals>
+        </execution>
+      </executions>
       </plugin>
     </plugins>
   </build>

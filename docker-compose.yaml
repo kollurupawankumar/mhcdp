@@ -79,6 +79,20 @@ services:
     ports:
       - "8081:8081"
 
+  mdhp-metadata-service:
+    build:
+      context: .
+      dockerfile: mdhp-metadata-service/Dockerfile
+    container_name: mdhp-metadata-service
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "8081:8081"
+
   mhcp-api-gateway:
     build:
       context: .

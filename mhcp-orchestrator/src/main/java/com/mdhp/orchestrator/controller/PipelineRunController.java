@@ -1,11 +1,14 @@
-package com.opencode.mdhp.orchestrator.controller;
+package com.mdhp.orchestrator.controller;
 
 import com.mdhp.common.dto.PipelineRunRequest;
 import com.mdhp.common.dto.PipelineRunResponse;
 import com.mdhp.common.dto.PipelineRunStatusResponse;
-import com.mdhp.common.entity.PipelineRunEntity;
-import com.mdhp.common.repository.PipelineRunRepository;
-import com.mdhp.common.service.PipelineRunService;
+
+
+import com.mdhp.orchestrator.entity.PipelineRunEntity;
+import com.mdhp.orchestrator.repository.PipelineRunRepository;
+import com.mdhp.orchestrator.service.PipelineRunService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/pipeline_runs")
 public class PipelineRunController {
 
-    private final PipelineRunService service;
-    private final PipelineRunRepository runRepo;
+    @Autowired
+    private PipelineRunService service;
 
-    public PipelineRunController(PipelineRunService service, PipelineRunRepository runRepo) {
-        this.service = service;
-        this.runRepo = runRepo;
-    }
+    @Autowired
+    private PipelineRunRepository runRepo;
 
     /**
      * Create a new pipeline run

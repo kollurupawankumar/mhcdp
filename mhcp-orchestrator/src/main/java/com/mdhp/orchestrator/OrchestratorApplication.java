@@ -1,13 +1,14 @@
-package com.opencode.mdhp.orchestrator;
+package com.mdhp.orchestrator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import java.util.UUID;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan(basePackages = {
+        "com.mdhp.orchestrator",
+        "com.mdhp.common"
+})
 public class OrchestratorApplication {
 
 

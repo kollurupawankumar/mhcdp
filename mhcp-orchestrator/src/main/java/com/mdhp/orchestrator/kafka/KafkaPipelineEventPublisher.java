@@ -1,6 +1,5 @@
-package com.opencode.mdhp.orchestrator.kafka;
+package com.mdhp.orchestrator.kafka;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
