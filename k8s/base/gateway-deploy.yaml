@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mhcp-api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mhcp-api-gateway
+  template:
+    metadata:
+      labels:
+        app: mhcp-api-gateway
+    spec:
+      containers:
+        - name: mhcp-api-gateway
+          image: mhcp-api-gateway:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env: []

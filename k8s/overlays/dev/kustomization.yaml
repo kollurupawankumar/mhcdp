@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - secret-mdhp.yaml
+
+patchesStrategicMerge:
+  - patch-dev-env.yaml
+  - patch-dev-nodeports.yaml
+
+images:
+  - name: mdhp-metadata-service
+    newName: mdhp-metadata-service
+    newTag: latest
+
+  - name: mhcp-api-gateway
+    newName: mhcp-api-gateway
+    newTag: latest

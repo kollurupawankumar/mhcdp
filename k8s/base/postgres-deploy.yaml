@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdhp-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mdhp-postgres
+  template:
+    metadata:
+      labels:
+        app: mdhp-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+
+          # env injected via overlay (dev secret, prod external secret)
+          env: []
+
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -U mdhp -d mdhp"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: pgdata
+          persistentVolumeClaim:
+            claimName: mdhp-postgres-pvc

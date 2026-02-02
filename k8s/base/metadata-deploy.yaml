@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdhp-metadata-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mdhp-metadata-service
+  template:
+    metadata:
+      labels:
+        app: mdhp-metadata-service
+    spec:
+      containers:
+        - name: mdhp-metadata-service
+          image: mdhp-metadata-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env: []

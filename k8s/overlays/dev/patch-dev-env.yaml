@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdhp-postgres
+spec:
+  template:
+    spec:
+      containers:
+        - name: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: mdhp-secret
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mdhp-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mdhp-secret
+                  key: POSTGRES_PASSWORD
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdhp-metadata-service
+spec:
+  template:
+    spec:
+      containers:
+        - name: mdhp-metadata-service
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+            - name: DB_HOST
+              value: db
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mdhp-secret
+                  key: POSTGRES_DB
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mdhp-secret
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mdhp-secret
+                  key: POSTGRES_PASSWORD
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:29092
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mhcp-api-gateway
+spec:
+  template:
+    spec:
+      containers:
+        - name: mhcp-api-gateway
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:29092
