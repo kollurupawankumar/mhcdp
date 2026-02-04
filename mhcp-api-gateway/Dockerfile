@@ -3,7 +3,7 @@ WORKDIR /workspace
 
 # Copy everything (parent pom + modules)
 COPY . .
-
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 RUN mvn -f mhcp-api-gateway/pom.xml clean package -DskipTests
 
 # Runtime stage

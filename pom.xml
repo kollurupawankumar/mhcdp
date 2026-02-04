@@ -22,6 +22,7 @@
     <module>mhcp-transformation-service</module>
     <module>mhcp-enrichment-service</module>
       <module>mdhp-common</module>
+      <module>mhcp-release-manager</module>
 
   </modules>
 

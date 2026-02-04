@@ -2,6 +2,7 @@ package com.mdhp.orchestrator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
         "com.mdhp.orchestrator",
         "com.mdhp.common"
 })
+@ConfigurationPropertiesScan
 public class OrchestratorApplication {
 
 

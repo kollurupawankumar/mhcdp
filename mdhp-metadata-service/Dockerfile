@@ -4,7 +4,7 @@ WORKDIR /workspace
 
 # Copy everything (parent pom + modules)
 COPY . .
-
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 # Build only required module (faster)
 RUN mvn clean package -DskipTests -pl mdhp-metadata-service -am
 

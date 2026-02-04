@@ -1,0 +1,38 @@
+apiVersion: mhcp/v1
+kind: ConnectionBundle
+metadata:
+  domain: claims
+  version: 1
+
+spec:
+  # ✅ domain defaults used by 100 datasets
+  defaults:
+    connectionRef: claims_epic_fhir_conn
+
+  connections:
+    # ---- FHIR API connection shared across claims datasets ----
+    - name: claims_epic_fhir_conn
+      type: API_FHIR
+      baseUrl: https://epic-fhir.company.com
+      auth:
+        type: OAUTH2_CLIENT_CREDENTIALS
+        tokenUrl: https://auth.company.com/oauth2/token
+        clientIdSecretRef: secret://vault/epic/clientId
+        clientSecretSecretRef: secret://vault/epic/clientSecret
+      properties:
+        rateLimit:
+          maxRps: 50
+        timeouts:
+          connectMs: "3000"
+          readMs: "15000"
+
+    # ---- JDBC connection used by enrichments/lookups ----
+    - name: claims_member_db_conn
+      type: DB_JDBC
+      secretRefs:
+        url: secret://vault/jdbc/memberdb/url
+        user: secret://vault/jdbc/memberdb/user
+        pass: secret://vault/jdbc/memberdb/pass
+      properties:
+        driver: org.postgresql.Driver
+        fetchsize: "10000"

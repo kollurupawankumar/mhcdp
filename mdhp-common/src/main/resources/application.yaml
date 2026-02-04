@@ -11,3 +11,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+mdhp:
+  kafka:
+    topics:
+      ingestion-command: mdhp.ingestion.command.v1
+      transformation-command: mdhp.transformation.command.v1
+      enrichment-command: mdhp.enrichment.command.v1
+      step-status: mdhp.pipeline.step.status.v1

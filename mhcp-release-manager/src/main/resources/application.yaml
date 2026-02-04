@@ -1,0 +1,16 @@
+spring:
+  main:
+    web-application-type: none
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mdhp
+    username: mdhp
+    password: mdhp
+
+  flyway:
+    enabled: true
+
+
+mhcp:
+  release:
+    default-status: ACTIVE
+    strict-validation: true

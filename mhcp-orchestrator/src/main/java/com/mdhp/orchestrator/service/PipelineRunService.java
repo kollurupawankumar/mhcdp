@@ -6,6 +6,7 @@ import com.mdhp.common.dto.PipelineRunRequest;
 
 import com.mdhp.orchestrator.entity.PipelineOutboxEventEntity;
 import com.mdhp.orchestrator.entity.PipelineRunEntity;
+import com.mdhp.orchestrator.kafka.KafkaTopicProps;
 import com.mdhp.orchestrator.repository.PipelineOutboxEventRepository;
 import com.mdhp.orchestrator.repository.PipelineRunRepository;
 import org.springframework.stereotype.Service;
@@ -21,18 +22,21 @@ import java.util.UUID;
 @Service
 public class PipelineRunService {
 
-    private static final String TOPIC_INGESTION_REQUEST = "mdhp.pipeline.ingestion.request";
+    private static final String TOPIC_INGESTION_REQUEST = "mdhp.ingestion.command.v1";
 
     private final PipelineRunRepository runRepo;
     private final PipelineOutboxEventRepository outboxRepo;
     private final ObjectMapper objectMapper;
+    private final KafkaTopicProps kafkaTopicProps;
 
     public PipelineRunService(PipelineRunRepository runRepo,
                               PipelineOutboxEventRepository outboxRepo,
-                              ObjectMapper objectMapper) {
+                              ObjectMapper objectMapper,
+                              KafkaTopicProps kafkaTopicProps) {
         this.runRepo = runRepo;
         this.outboxRepo = outboxRepo;
         this.objectMapper = objectMapper;
+        this.kafkaTopicProps = kafkaTopicProps;
     }
 
     private String generateRunId(String domainCode) {
@@ -61,9 +65,9 @@ public class PipelineRunService {
         event.put("entityId", request.entityId());
 
         String eventJson = objectMapper.writeValueAsString(event);
-
+        String topic = kafkaTopicProps.ingestionCommand();
         PipelineOutboxEventEntity outboxEvent =
-                PipelineOutboxEventEntity.newEvent(runId, TOPIC_INGESTION_REQUEST, "PIPELINE_TRIGGERED", eventJson);
+                PipelineOutboxEventEntity.newEvent(runId, topic, "PIPELINE_TRIGGERED", eventJson);
 
         outboxRepo.save(outboxEvent);
 

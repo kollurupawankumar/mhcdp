@@ -2,6 +2,7 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /workspace
 # Copy everything (parent pom + modules)
 COPY . .
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 # Build only required module (faster)
 RUN mvn -f pom.xml -pl mhcp-orchestrator -am clean package -DskipTests
 

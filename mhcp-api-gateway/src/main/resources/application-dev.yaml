@@ -12,8 +12,8 @@ spring:
             - StripPrefix=1
 
         # Pipeline manager route
-        - id: mdhp-orchestrator
-          uri: http://mdhp-orchestrator:8081
+        - id: mhcp-orchestrator
+          uri: http://mhcp-orchestrator:8082
           predicates:
             - Path=/pipeline/**
           filters:
