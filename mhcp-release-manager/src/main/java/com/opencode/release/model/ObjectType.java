@@ -6,5 +6,6 @@ public enum ObjectType {
     PIPELINE_TEMPLATE,
     TRANSFORMATION,
     ENRICHMENT,
-    DATASET
+    DATASET,
+    INGESTION_PIPELINE
 }

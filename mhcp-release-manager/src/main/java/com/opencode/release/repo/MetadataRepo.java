@@ -110,7 +110,26 @@ public class MetadataRepo {
         AND object_name=?
       """, Integer.class, templateRef);
 
-        return count != null && count > 0;
+        return count > 0;
     }
+
+    public int getNextVersion(
+            String objectType,
+            String objectName) {
+
+        Integer v = jdbc.queryForObject("""
+        SELECT COALESCE(MAX(version), 0) + 1
+        FROM metadata_object_store
+        WHERE object_type = ?
+          AND object_name = ?
+    """,
+                Integer.class,
+                objectType,
+                objectName
+        );
+
+        return v;
+    }
+
 
 }

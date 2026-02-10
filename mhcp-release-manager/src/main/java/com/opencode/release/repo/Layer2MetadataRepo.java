@@ -1,7 +1,5 @@
 package com.opencode.release.repo;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opencode.release.compiler.CompiledEntityMetadata;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -9,172 +7,197 @@ import org.springframework.stereotype.Repository;
 public class Layer2MetadataRepo {
 
     private final JdbcTemplate jdbc;
-    private final ObjectMapper om;
 
-    public Layer2MetadataRepo(JdbcTemplate jdbc, ObjectMapper om) {
+    public Layer2MetadataRepo(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
-        this.om = om;
     }
 
-    // ----------------------------------------------------
+    // =========================================================
     // DOMAIN MASTER
-    // ----------------------------------------------------
-    public void upsertDomain(String domainCode) {
+    // =========================================================
+    public void upsertDomain(
+            String domainCode,
+            String frequency) {
+
         jdbc.update("""
-            INSERT INTO domain_master(domain_code, domain_name, run_frequency, active_flag)
-            VALUES (?, ?, ?, TRUE)
+            INSERT INTO domain_master(
+                domain_code,
+                domain_name,
+                run_frequency,
+                active_flag,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?, TRUE, NOW(), NOW())
             ON CONFLICT (domain_code)
             DO UPDATE SET
-                domain_name = EXCLUDED.domain_name,
-                active_flag = TRUE,
-                updated_at = now()
-            """,
+                run_frequency = EXCLUDED.run_frequency,
+                updated_at = NOW()
+        """,
                 domainCode,
-                domainCode.toUpperCase(),
-                "daily"
+                domainCode,
+                frequency
         );
     }
 
-    // ----------------------------------------------------
+    // =========================================================
     // ENTITY MASTER
-    // ----------------------------------------------------
-    public void upsertEntity(String domainCode, String entityId, String entityName) {
+    // =========================================================
+    public void upsertEntity(
+            String domainCode,
+            String entityId,
+            String frequency) {
+
         jdbc.update("""
-            INSERT INTO entity_master(domain_code, entity_id, subject_area, entity_name, active_flag)
-            VALUES (?, ?, ?, ?, TRUE)
+            INSERT INTO entity_master(
+                domain_code,
+                entity_id,
+                entity_name,
+                entity_frequency,
+                active_flag,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?, ?, TRUE, NOW(), NOW())
             ON CONFLICT (entity_id)
             DO UPDATE SET
-                domain_code = EXCLUDED.domain_code,
-                subject_area = EXCLUDED.subject_area,
-                entity_name = EXCLUDED.entity_name,
-                active_flag = TRUE,
-                updated_at = now()
-            """,
+                entity_frequency = EXCLUDED.entity_frequency,
+                updated_at = NOW()
+        """,
                 domainCode,
                 entityId,
-                domainCode,
-                entityName
+                entityId,
+                frequency
         );
     }
 
-    // ----------------------------------------------------
+    // =========================================================
     // SOURCE METADATA
-    // ----------------------------------------------------
-    public void upsertSourceMetadata(CompiledEntityMetadata c, int version) {
-        try {
-            String sourceJson = om.writeValueAsString(c.sourceConfig());
+    // =========================================================
+    public void insertSourceMetadata(
+            String domain,
+            String entity,
+            String sourceType,
+            String jsonConfig,
+            int version) {
 
-            String sourceType = String.valueOf(
-                    c.sourceConfig().getOrDefault("sourceType", "UNKNOWN")
-            );
-
-            jdbc.update("""
-                INSERT INTO source_metadata(domain_code, entity_id, source_type, source_config, version, active_flag)
-                VALUES (?, ?, ?, CAST(? AS jsonb), ?, TRUE)
-                ON CONFLICT (entity_id, version)
-                DO UPDATE SET
-                    domain_code = EXCLUDED.domain_code,
-                    source_type = EXCLUDED.source_type,
-                    source_config = EXCLUDED.source_config,
-                    active_flag = TRUE,
-                    updated_at = now()
-                """,
-                    c.domainCode(),
-                    c.entityId(),
-                    sourceType,
-                    sourceJson,
-                    version
-            );
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to upsert source_metadata for " + c.entityId(), e);
-        }
+        jdbc.update("""
+            INSERT INTO source_metadata(
+                domain_code,
+                entity_id,
+                source_type,
+                source_config,
+                version,
+                active_flag,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?, ?::jsonb, ?, TRUE, NOW(), NOW())
+        """,
+                domain,
+                entity,
+                sourceType,
+                jsonConfig,
+                version
+        );
     }
 
-    // ----------------------------------------------------
+    // =========================================================
     // TRANSFORMATION METADATA
-    // ----------------------------------------------------
-    public void upsertTransformationMetadata(CompiledEntityMetadata c, int version) {
-        if (c.transformConfig() == null) return;
+    // =========================================================
+    public void insertTransformationMetadata(
+            String domain,
+            String entity,
+            String inputTable,
+            String outputTable,
+            String jsonConfig,
+            int version) {
 
-        try {
-            String json = om.writeValueAsString(c.transformConfig());
-
-            jdbc.update("""
-                INSERT INTO transformation_metadata(domain_code, entity_id, transform_config, version, active_flag)
-                VALUES (?, ?, CAST(? AS jsonb), ?, TRUE)
-                ON CONFLICT (entity_id, version)
-                DO UPDATE SET
-                    domain_code = EXCLUDED.domain_code,
-                    transform_config = EXCLUDED.transform_config,
-                    active_flag = TRUE,
-                    updated_at = now()
-                """,
-                    c.domainCode(),
-                    c.entityId(),
-                    json,
-                    version
-            );
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to upsert transformation_metadata for " + c.entityId(), e);
-        }
+        jdbc.update("""
+            INSERT INTO transformation_metadata(
+                domain_code,
+                entity_id,
+                input_table,
+                output_table,
+                transform_config,
+                version,
+                active_flag,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?, ?, ?::jsonb, ?, TRUE, NOW(), NOW())
+        """,
+                domain,
+                entity,
+                inputTable,
+                outputTable,
+                jsonConfig,
+                version
+        );
     }
 
-    // ----------------------------------------------------
+    // =========================================================
     // ENRICHMENT METADATA
-    // ----------------------------------------------------
-    public void upsertEnrichmentMetadata(CompiledEntityMetadata c, int version) {
-        if (c.enrichConfig() == null) return;
+    // =========================================================
+    public void insertEnrichmentMetadata(
+            String domain,
+            String entity,
+            String jsonConfig,
+            int version) {
 
-        try {
-            String json = om.writeValueAsString(c.enrichConfig());
-
-            jdbc.update("""
-                INSERT INTO enrichment_metadata(domain_code, entity_id, enrich_config, version, active_flag)
-                VALUES (?, ?, CAST(? AS jsonb), ?, TRUE)
-                ON CONFLICT (entity_id, version)
-                DO UPDATE SET
-                    domain_code = EXCLUDED.domain_code,
-                    enrich_config = EXCLUDED.enrich_config,
-                    active_flag = TRUE,
-                    updated_at = now()
-                """,
-                    c.domainCode(),
-                    c.entityId(),
-                    json,
-                    version
-            );
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to upsert enrichment_metadata for " + c.entityId(), e);
-        }
+        jdbc.update("""
+            INSERT INTO enrichment_metadata(
+                domain_code,
+                entity_id,
+                enrich_config,
+                version,
+                active_flag,
+                created_at,
+                updated_at
+            )
+            VALUES (?, ?, ?::jsonb, ?, TRUE, NOW(), NOW())
+        """,
+                domain,
+                entity,
+                jsonConfig,
+                version
+        );
     }
 
-    // ----------------------------------------------------
-    // ACTIVATION HELPERS
-    // ----------------------------------------------------
-    public void deactivateOldVersions(String entityId, int keepVersion) {
+    // =========================================================
+    // OPTIONAL — DEACTIVATE OLD VERSIONS
+    // (useful during activation step)
+    // =========================================================
+    public void deactivateOldSourceVersions(
+            String entity) {
 
         jdbc.update("""
             UPDATE source_metadata
-            SET active_flag = FALSE, updated_at = now()
+            SET active_flag = FALSE,
+                updated_at = NOW()
             WHERE entity_id = ?
-              AND version <> ?
-            """, entityId, keepVersion);
+        """, entity);
+    }
+
+    public void deactivateOldTransformationVersions(
+            String entity) {
 
         jdbc.update("""
             UPDATE transformation_metadata
-            SET active_flag = FALSE, updated_at = now()
+            SET active_flag = FALSE,
+                updated_at = NOW()
             WHERE entity_id = ?
-              AND version <> ?
-            """, entityId, keepVersion);
+        """, entity);
+    }
+
+    public void deactivateOldEnrichmentVersions(
+            String entity) {
 
         jdbc.update("""
             UPDATE enrichment_metadata
-            SET active_flag = FALSE, updated_at = now()
+            SET active_flag = FALSE,
+                updated_at = NOW()
             WHERE entity_id = ?
-              AND version <> ?
-            """, entityId, keepVersion);
+        """, entity);
     }
 }
