@@ -1,0 +1,44 @@
+ingestion:
+  pipeline_name: file_to_delta_customer_ingestion
+  domain: finance
+  entity: customer_file
+  load_type: full
+  orchestration: airflow
+
+source:
+  type: file
+  path: s3://landing/finance/customer/
+  format: csv
+
+target:
+  type: delta
+  catalog: hive_metastore
+  database: finance_gold
+  table: customer_file
+
+  write_mode: overwrite
+
+transformation:
+  select_columns:
+    - CUSTOMER_ID
+    - CUSTOMER_NAME
+    - EMAIL
+    - COUNTRY_CODE
+
+  derived_columns:
+    ingestion_ts: current_timestamp()
+
+schedule:
+  frequency: daily
+  timezone: UTC
+
+compute:
+  engine: spark
+  cluster_size: small
+  autoscaling: true
+
+governance:
+  pii_columns:
+    - EMAIL
+  encryption: true
+  lineage_capture: true

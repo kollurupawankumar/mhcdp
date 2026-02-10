@@ -1,0 +1,160 @@
+# ==========================================
+# PIPELINE EXECUTION TEMPLATE (UNIFIED)
+# ==========================================
+
+ingestion:
+  pipeline_name: <unique_pipeline_name>
+  domain: <domain_name>
+  entity: <entity_name>
+
+  load_type: full | incremental
+  orchestration: airflow | spark | kubernetes
+
+# ---------------- SOURCE ----------------
+source:
+  type: db | file | api | stream
+
+  # ===== DB =====
+  db:
+    platform: oracle | postgres | mysql | snowflake
+    host: <hostname>
+    port: <port>
+    database: <database>
+    schema: <schema>
+    table: <table>
+
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+    fetch_size: 5000
+    incremental_column: <column_name>
+
+  # ===== FILE =====
+  file:
+    format: csv | json | parquet
+    path: <storage_path>
+
+    delimiter: ","
+    header: true
+    infer_schema: true
+
+  # ===== API =====
+  api:
+    endpoint: <api_url>
+    method: GET | POST
+
+    connection:
+      auth_type: bearer | basic | api_key
+      token: ${API_TOKEN}
+      username: ${API_USER}
+      password: ${API_PASS}
+
+  # ===== STREAM =====
+  stream:
+    platform: kafka
+    topic: <topic_name>
+    bootstrap_servers: <host:port>
+
+# ---------------- TARGET ----------------
+target:
+  type: delta | iceberg | hive
+
+  catalog: <catalog>
+  database: <database>
+  table: <table>
+
+  path: <optional_path>
+
+  write_mode: append | overwrite | merge
+
+  merge_keys:
+    - <primary_key>
+
+  partition_columns:
+    - <column>
+
+# ---------------- TRANSFORMATION ----------------
+transformation:
+
+  select_columns:
+    - <column_1>
+    - <column_2>
+
+  rename_columns:
+    old_name: new_name
+
+  cast_columns:
+    column_name: datatype
+
+  derived_columns:
+    ingestion_ts: current_timestamp()
+
+  validations:
+    - rule: not_null
+      column: <column>
+
+# ---------------- ENRICHMENT ----------------
+enrichment:
+
+  # Multiple enrichments allowed
+  - name: <enrichment_name>
+
+    type: lookup | sql | api
+
+    # ===== LOOKUP ENRICHMENT =====
+    lookup:
+
+      source_table: <table_name>
+      database: <database>
+
+      join_condition:
+        left_column: <column>
+        right_column: <column>
+
+      select_columns:
+        - <column>
+
+    # ===== SQL ENRICHMENT =====
+    sql:
+
+      query: |
+        SELECT key,
+               value
+        FROM enrichment_table
+
+      join_key: <column_name>
+
+    # ===== API ENRICHMENT =====
+    api:
+
+      endpoint: <api_url>
+      method: GET
+
+      response_mapping:
+        source_field: target_column
+
+# ---------------- SCHEDULE ----------------
+schedule:
+  frequency: hourly | daily | weekly
+  timezone: UTC
+
+# ---------------- COMPUTE ----------------
+compute:
+  engine: spark
+  cluster_size: small | medium | large
+  autoscaling: true | false
+
+# ---------------- GOVERNANCE ----------------
+governance:
+
+  pii_columns:
+    - <column>
+
+  encryption: true | false
+  lineage_capture: true | false
+
+# ---------------- MONITORING ----------------
+monitoring:
+
+  alert_on_failure: true
+  sla_minutes: 60

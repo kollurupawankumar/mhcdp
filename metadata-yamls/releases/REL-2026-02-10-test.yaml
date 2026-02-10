@@ -1,0 +1,18 @@
+kind: MetadataRelease
+
+metadata:
+  name: REL-2026-02-10-test
+
+spec:
+  env: dev
+
+  bundles:
+
+    - kind: IngestionBundle
+      file: finance/customer_file_ingestion.yaml
+
+    - kind: IngestionBundle
+      file: finance/customer_db_ingestion.yaml
+
+    - kind: IngestionBundle
+      file: finance/customer_api_ingestion.yaml

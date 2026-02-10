@@ -1,0 +1,45 @@
+ingestion:
+  pipeline_name: api_to_delta_customer_ingestion
+  domain: finance
+  entity: customer_api
+  load_type: full
+  orchestration: airflow
+
+source:
+  type: api
+  endpoint: https://api.company.com/customers
+  method: GET
+
+  connection:
+    auth_type: bearer
+    token: sample_token_123
+
+target:
+  type: delta
+  catalog: hive_metastore
+  database: finance_gold
+  table: customer_api
+
+  write_mode: append
+
+transformation:
+  select_columns:
+    - id
+    - name
+    - email
+    - phone
+
+schedule:
+  frequency: daily
+  timezone: UTC
+
+compute:
+  engine: spark
+  cluster_size: small
+  autoscaling: false
+
+governance:
+  pii_columns:
+    - email
+  encryption: true
+  lineage_capture: true

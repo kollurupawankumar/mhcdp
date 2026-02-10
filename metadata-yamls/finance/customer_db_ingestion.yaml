@@ -1,0 +1,56 @@
+ingestion:
+  pipeline_name: oracle_to_delta_customer_ingestion
+  domain: finance
+  entity: customer_db
+  load_type: incremental
+  orchestration: airflow
+
+source:
+  type: oracle
+  schema: FINANCE
+  table: CUSTOMER_MASTER
+
+  connection:
+    host: oracle-prod.company.com
+    port: 1521
+    service_name: ORCL
+    username: finance_user
+    password: finance_pass
+
+incremental:
+  column: LAST_UPDATED_TS
+
+target:
+  type: delta
+  catalog: hive_metastore
+  database: finance_gold
+  table: customer_master
+
+  write_mode: merge
+
+  merge_keys:
+    - CUSTOMER_ID
+
+transformation:
+  select_columns:
+    - CUSTOMER_ID
+    - CUSTOMER_NAME
+    - EMAIL
+    - PHONE
+    - LAST_UPDATED_TS
+
+schedule:
+  frequency: hourly
+  timezone: UTC
+
+compute:
+  engine: spark
+  cluster_size: medium
+  autoscaling: true
+
+governance:
+  pii_columns:
+    - EMAIL
+    - PHONE
+  encryption: true
+  lineage_capture: true
